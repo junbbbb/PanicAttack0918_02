@@ -43,10 +43,15 @@ lib/
    ```
 4. 실행
    ```bash
-   flutter run
-   ```
+ flutter run
+  ```
 
 > 현재 저장소는 예시로 생성된 `.g.dart` 파일을 포함합니다. 의존성 혹은 Provider 선언을 수정한 뒤에는 `build_runner`를 재실행해 최신 상태를 유지하세요.
+
+## 웹 배포 (GitHub Pages)
+- `main` 브랜치에 푸시하면 `.github/workflows/deploy-web.yml` 워크플로우가 웹 번들을 생성하고 `gh-pages` 브랜치로 배포합니다.
+- Pages 설정에서 소스를 `gh-pages` 브랜치로 지정하세요.
+- 수동 배포 및 추가 설정 방법은 `docs/deployment_github_pages.md`에 정리되어 있습니다.
 
 ## 다음 작업 아이디어
 1. 실제 API 엔드포인트를 연결하고 `TodosApiClient`/`TodosRepository`에 에러 처리와 동기화 로직을 보강하세요.
