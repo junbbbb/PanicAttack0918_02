@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 class AppShell extends ConsumerWidget {
@@ -11,43 +12,66 @@ class AppShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: DecoratedBox(
-        position: DecorationPosition.foreground,
-        decoration: const BoxDecoration(
-          border: Border(
-            top: BorderSide(color: Color(0xFF000000), width: 1.5),
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        destinations: const [
+          NavigationDestination(
+            icon: _NavIcon(baseName: 'home'),
+            selectedIcon: _NavIcon(
+              baseName: 'home',
+              isSelected: true,
+            ),
+            label: '홈',
           ),
-        ),
-        child: NavigationBar(
-          selectedIndex: navigationShell.currentIndex,
-          destinations: const [
-            NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home),
-              label: '홈',
+          NavigationDestination(
+            icon: _NavIcon(baseName: 'record'),
+            selectedIcon: _NavIcon(
+              baseName: 'record',
+              isSelected: true,
             ),
-            NavigationDestination(
-              icon: Icon(Icons.checklist_outlined),
-              selectedIcon: Icon(Icons.checklist),
-              label: '할 일',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.person_outline),
-              selectedIcon: Icon(Icons.person),
-              label: '프로필',
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.settings_outlined),
-              selectedIcon: Icon(Icons.settings),
-              label: '설정',
-            ),
-          ],
-          onDestinationSelected: (index) => navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
+            label: '기록',
           ),
+          NavigationDestination(
+            icon: _NavIcon(baseName: 'analyis'),
+            selectedIcon: _NavIcon(
+              baseName: 'analyis',
+              isSelected: true,
+            ),
+            label: '분석',
+          ),
+          NavigationDestination(
+            icon: _NavIcon(baseName: 'profile'),
+            selectedIcon: _NavIcon(
+              baseName: 'profile',
+              isSelected: true,
+            ),
+            label: '프로필',
+          ),
+        ],
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
         ),
       ),
+    );
+  }
+}
+
+class _NavIcon extends StatelessWidget {
+  const _NavIcon({required this.baseName, this.isSelected = false});
+
+  final String baseName;
+  final bool isSelected;
+
+  @override
+  Widget build(BuildContext context) {
+    final suffix = isSelected ? '_s' : '';
+    final assetPath = 'assets/icons/navigation/${baseName}${suffix}.svg';
+
+    return SvgPicture.asset(
+      assetPath,
+      width: 24,
+      height: 24,
     );
   }
 }

@@ -22,9 +22,18 @@ class PanicAttackApp extends ConsumerWidget {
       theme: ThemeData(
         colorScheme: colorScheme,
         scaffoldBackgroundColor: Colors.white,
-        navigationBarTheme: const NavigationBarThemeData(
+        navigationBarTheme: NavigationBarThemeData(
           backgroundColor: Colors.white,
           surfaceTintColor: Colors.transparent,
+          indicatorColor: Colors.transparent,
+          labelTextStyle: MaterialStateProperty.resolveWith(
+            (states) => TextStyle(
+              color: states.contains(MaterialState.selected)
+                  ? const Color(0xFF39322C)
+                  : const Color(0xFF727883),
+              fontSize: 12,
+            ),
+          ),
         ),
         useMaterial3: true,
       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:panicattack0918_02/app/router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class HomePage extends StatelessWidget {
@@ -110,20 +112,21 @@ class HomePage extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
+                      children: [
                         _HomeActionButton(
                           label: '호흡법',
                           icon: Icons.air,
+                          onTap: () => context.goNamed(AppRoute.breathing.name),
                         ),
-                        _HomeActionButton(
+                        const _HomeActionButton(
                           label: '그라운딩',
                           icon: Icons.spa,
                         ),
-                        _HomeActionButton(
+                        const _HomeActionButton(
                           label: '명상',
                           icon: Icons.self_improvement,
                         ),
-                        _HomeActionButton(
+                        const _HomeActionButton(
                           label: '교육',
                           icon: Icons.menu_book,
                         ),
@@ -141,40 +144,48 @@ class HomePage extends StatelessWidget {
 }
 
 class _HomeActionButton extends StatelessWidget {
-  const _HomeActionButton({required this.label, required this.icon});
+  const _HomeActionButton({
+    required this.label,
+    required this.icon,
+    this.onTap,
+  });
 
   final String label;
   final IconData icon;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme.labelLarge;
 
-    return Container(
-      width: 85,
-      height: 88,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: const Color(0xFFE0E0D9),
-          width: 3,
-        ),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x40000000),
-            offset: Offset(0, 2),
-            blurRadius: 0,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 85,
+        height: 88,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFFE0E0D9),
+            width: 3,
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 24, color: Colors.black87),
-          const SizedBox(height: 6),
-          Text(label, style: textStyle),
-        ],
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x40000000),
+              offset: Offset(0, 2),
+              blurRadius: 0,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 24, color: Colors.black87),
+            const SizedBox(height: 6),
+            Text(label, style: textStyle),
+          ],
+        ),
       ),
     );
   }
