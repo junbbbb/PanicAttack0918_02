@@ -5,6 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../features/breathing/presentation/breathing_page.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/profile/presentation/profile_page.dart';
+import '../features/record/presentation/record_page.dart';
 import '../features/settings/presentation/settings_page.dart';
 import '../features/todos/presentation/todo_detail_page.dart';
 import '../features/todos/presentation/todos_page.dart';
@@ -12,7 +13,7 @@ import 'shell_scaffold.dart';
 
 part 'router.g.dart';
 
-enum AppRoute { home, breathing, todos, todoDetail, profile, settings }
+enum AppRoute { home, breathing, record, todos, todoDetail, profile, settings }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
@@ -89,6 +90,12 @@ GoRouter appRouter(AppRouterRef ref) {
             ],
           ),
         ],
+      ),
+      GoRoute(
+        path: '/record',
+        name: AppRoute.record.name,
+        parentNavigatorKey: _rootNavigatorKey,
+        builder: (context, state) => const RecordPage(),
       ),
     ],
   );
