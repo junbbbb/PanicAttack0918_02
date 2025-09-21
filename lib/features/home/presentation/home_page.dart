@@ -14,102 +14,127 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFFC9BCB2),
         title: Text('peacetrack', style: logoTextStyle),
         centerTitle: false,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.only(bottom: 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              height: 70,
-              color: const Color(0xFFF7F4F2),
-            ),
-            SizedBox(
-              height: screenHeight * 0.5,
-              width: double.infinity,
-              child: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image:
-                        AssetImage('assets/images/backgrounds/defaultbg.png'),
-                    fit: BoxFit.cover,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            height: 70,
+            color: const Color(0xFFC9BCB2),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Level 1',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: const Color(0xFF3F352F),
+                        fontWeight: FontWeight.w600),
                   ),
-                ),
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    final width = constraints.maxWidth;
-                    final targetSize = width * 0.3;
-
-                    return Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: 16 + (screenHeight * 0.05),
-                        ),
-                        child: Container(
-                          padding: const EdgeInsets.all(12),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: Colors.black.withOpacity(0.1),
-                              width: 2,
-                            ),
-                          ),
-                          child: SizedBox(
-                            height: targetSize,
-                            width: targetSize,
-                            child: Image.asset(
-                              'assets/images/characters/bare.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
+                  const SizedBox(height: 8),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8),
+                    child: LinearProgressIndicator(
+                      value: 0.45,
+                      minHeight: 12,
+                      backgroundColor: Colors.white.withOpacity(0.3),
+                      valueColor:
+                          const AlwaysStoppedAnimation(Color(0xFF7A6F67)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: Stack(
+                    alignment: Alignment.bottomCenter,
+                    children: [
+                      Positioned.fill(
+                        child: Image.asset(
+                          'assets/images/backgrounds/defaultbg.png',
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    );
-                  },
+                      LayoutBuilder(
+                        builder: (context, constraints) {
+                          final targetSize =
+                              (constraints.maxWidth * 0.32).clamp(160.0, 320.0);
+
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 24),
+                            child: Container(
+                              padding: const EdgeInsets.all(12),
+                              child: SizedBox(
+                                height: targetSize,
+                                width: targetSize,
+                                child: Image.asset(
+                                  'assets/images/characters/bare.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Expanded(
+                  child: Container(
+                    color: const Color(0xFFF7F3E5),
+                  ),
+                ),
+                Container(
+                  height: 120,
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF7F3E5),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(35),
+                      bottomRight: Radius.circular(35),
+                    ),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: const [
+                        _HomeActionButton(
+                          label: '호흡법',
+                          icon: Icons.air,
+                        ),
+                        _HomeActionButton(
+                          label: '그라운딩',
+                          icon: Icons.spa,
+                        ),
+                        _HomeActionButton(
+                          label: '명상',
+                          icon: Icons.self_improvement,
+                        ),
+                        _HomeActionButton(
+                          label: '교육',
+                          icon: Icons.menu_book,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-            Container(
-              height: 120,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF7F3E5),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(35),
-                  bottomRight: Radius.circular(35),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    _HomeActionButton(
-                      label: '호흡법',
-                      icon: Icons.air,
-                    ),
-                    _HomeActionButton(
-                      label: '그라운딩',
-                      icon: Icons.spa,
-                    ),
-                    _HomeActionButton(
-                      label: '명상',
-                      icon: Icons.self_improvement,
-                    ),
-                    _HomeActionButton(
-                      label: '교육',
-                      icon: Icons.menu_book,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
