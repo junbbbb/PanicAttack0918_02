@@ -25,7 +25,9 @@ class AppShell extends ConsumerWidget {
             color: borderColor,
           ),
           NavigationBar(
-            selectedIndex: navigationShell.currentIndex,
+            selectedIndex: navigationShell.currentIndex >= 1
+                ? (navigationShell.currentIndex + 1).clamp(0, 3)
+                : navigationShell.currentIndex,
             destinations: const [
               NavigationDestination(
             icon: _NavIcon(baseName: 'home'),
@@ -65,9 +67,11 @@ class AppShell extends ConsumerWidget {
                 context.pushNamed(AppRoute.record.name);
                 return;
               }
+
+              final branchIndex = index > 1 ? index - 1 : index;
               navigationShell.goBranch(
-                index,
-                initialLocation: index == navigationShell.currentIndex,
+                branchIndex,
+                initialLocation: branchIndex == navigationShell.currentIndex,
               );
             },
           ),

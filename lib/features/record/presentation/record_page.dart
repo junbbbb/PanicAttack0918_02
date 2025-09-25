@@ -1,17 +1,20 @@
 import 'dart:async';
 
-import 'package:characters/characters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class RecordPage extends StatefulWidget {
+import '../controllers/record_history_controller.dart';
+import '../domain/panic_record.dart';
+
+class RecordPage extends ConsumerStatefulWidget {
   const RecordPage({super.key});
 
   @override
-  State<RecordPage> createState() => _RecordPageState();
+  ConsumerState<RecordPage> createState() => _RecordPageState();
 }
 
-class _RecordPageState extends State<RecordPage> {
+class _RecordPageState extends ConsumerState<RecordPage> {
   final List<String> _emotionEmojis = const ['😀', '🙂', '😐', '🙁', '😢'];
   final TextEditingController _entryController = TextEditingController();
   final TextEditingController _panicContextController = TextEditingController();
@@ -161,7 +164,7 @@ class _RecordPageState extends State<RecordPage> {
     });
   }
 
-  void _handlePanicResponse(bool hadAttack) {
+  Future<void> _handlePanicResponse(bool hadAttack) async {
     _panicOccurrenceQuestionTimer?.cancel();
     _panicOccurrenceSelectorTimer?.cancel();
     _panicContextQuestionTimer?.cancel();
@@ -184,6 +187,13 @@ class _RecordPageState extends State<RecordPage> {
         _showPanicSymptomsQuestion = false;
         _showPanicSymptomsSelector = false;
         _showPanicSymptomsInput = false;
+        _recordSaved = false;
+      });
+      await _saveRecord(panicOccurred: false);
+      if (!mounted) {
+        return;
+      }
+      setState(() {
         _recordSaved = true;
       });
       debugPrint('오늘 공황발작 있었어?: 아니오');
@@ -489,7 +499,7 @@ class _RecordPageState extends State<RecordPage> {
     FocusScope.of(context).unfocus();
   }
 
-  void _handleSymptomsSave() {
+  Future<void> _handleSymptomsSave() async {
     if (_panicSymptomsSelections.isEmpty) {
       return;
     }
@@ -500,9 +510,46 @@ class _RecordPageState extends State<RecordPage> {
       _showPanicSymptomsSelector = false;
       _showPanicSymptomsInput = false;
       _panicSymptomsCustomActive = false;
-      _recordSaved = true;
+      _recordSaved = false;
     });
     debugPrint('공황 증상 저장: $answers');
+    await _saveRecord(panicOccurred: true, symptoms: answers);
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _recordSaved = true;
+    });
+  }
+
+  Future<void> _saveRecord({
+    required bool panicOccurred,
+    List<String>? symptoms,
+  }) async {
+    final mood = _selectedEmoji;
+    if (mood == null) {
+      return;
+    }
+
+    final now = DateTime.now();
+    final trimmedEntry = _submittedEntry?.trim();
+    final normalizedEntry =
+        (trimmedEntry != null && trimmedEntry.isEmpty) ? null : trimmedEntry;
+    final record = PanicRecord(
+      id: 'record-${now.microsecondsSinceEpoch}',
+      createdAt: now,
+      moodEmoji: mood,
+      entry: normalizedEntry,
+      panicOccurred: panicOccurred,
+      panicOccurredAt: panicOccurred ? _panicOccurredAt : null,
+      panicContext: panicOccurred ? _panicContext : null,
+      panicSymptoms: panicOccurred
+          ? List<String>.unmodifiable(
+              symptoms ?? _panicSymptomsAnswer ?? const <String>[])
+          : const <String>[],
+    );
+
+    await ref.read(recordHistoryControllerProvider.notifier).addRecord(record);
   }
 
   String _formatDate(DateTime date) {
@@ -1525,7 +1572,6 @@ class _CustomContextComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, _) {
@@ -1685,7 +1731,6 @@ class _CustomSymptomComposer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return ValueListenableBuilder<TextEditingValue>(
       valueListenable: controller,
       builder: (context, value, _) {

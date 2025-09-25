@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../features/analysis/presentation/analysis_page.dart';
 import '../features/breathing/presentation/breathing_page.dart';
 import '../features/home/presentation/home_page.dart';
 import '../features/profile/presentation/profile_page.dart';
 import '../features/record/presentation/record_page.dart';
 import '../features/settings/presentation/settings_page.dart';
-import '../features/todos/presentation/todo_detail_page.dart';
-import '../features/todos/presentation/todos_page.dart';
 import 'shell_scaffold.dart';
 
 part 'router.g.dart';
 
-enum AppRoute { home, breathing, record, todos, todoDetail, profile, settings }
+enum AppRoute { home, breathing, record, analysis, profile, settings }
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'root');
 final _homeNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'home');
-final _todosNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'todos');
+final _analysisNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'analysis');
 final _profileNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'profile');
 final _settingsNavigatorKey = GlobalKey<NavigatorState>(debugLabel: 'settings');
 
@@ -50,22 +49,12 @@ GoRouter appRouter(AppRouterRef ref) {
             ],
           ),
           StatefulShellBranch(
-            navigatorKey: _todosNavigatorKey,
+            navigatorKey: _analysisNavigatorKey,
             routes: [
               GoRoute(
-                path: '/todos',
-                name: AppRoute.todos.name,
-                builder: (context, state) => const TodosPage(),
-                routes: [
-                  GoRoute(
-                    path: ':id',
-                    name: AppRoute.todoDetail.name,
-                    builder: (context, state) {
-                      final todoId = state.pathParameters['id']!;
-                      return TodoDetailPage(todoId: todoId);
-                    },
-                  ),
-                ],
+                path: '/analysis',
+                name: AppRoute.analysis.name,
+                builder: (context, state) => const AnalysisPage(),
               ),
             ],
           ),
