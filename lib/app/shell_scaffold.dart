@@ -12,12 +12,22 @@ class AppShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final borderColor = Theme.of(context).colorScheme.outlineVariant;
+
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        destinations: const [
-          NavigationDestination(
+      bottomNavigationBar: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(
+            height: 1,
+            thickness: 1,
+            color: borderColor,
+          ),
+          NavigationBar(
+            selectedIndex: navigationShell.currentIndex,
+            destinations: const [
+              NavigationDestination(
             icon: _NavIcon(baseName: 'home'),
             selectedIcon: _NavIcon(
               baseName: 'home',
@@ -50,16 +60,18 @@ class AppShell extends ConsumerWidget {
             label: '프로필',
           ),
         ],
-        onDestinationSelected: (index) {
-          if (index == 1) {
-            context.pushNamed(AppRoute.record.name);
-            return;
-          }
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
+            onDestinationSelected: (index) {
+              if (index == 1) {
+                context.pushNamed(AppRoute.record.name);
+                return;
+              }
+              navigationShell.goBranch(
+                index,
+                initialLocation: index == navigationShell.currentIndex,
+              );
+            },
+          ),
+        ],
       ),
     );
   }
